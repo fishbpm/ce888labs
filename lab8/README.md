@@ -1,4 +1,4 @@
-# Lab3 - Predictive Modelling
+# Lab8 - CNN Configuration - for Sentiment Analysis
 
 ## Submission 
 * Please note I have only pushed the content that I have produced in the lab, and any immediate dependencies.

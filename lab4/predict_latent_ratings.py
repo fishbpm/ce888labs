@@ -9,6 +9,8 @@ import numpy as np
 import pandas as pd
 import random
 import time
+import matplotlib.pyplot as plt
+import seaborn as sb
 
 df = pd.read_csv("jester-data-1.csv", header=None)
 
@@ -20,6 +22,7 @@ data.drop(data.columns[0], axis=1, inplace=True) #1st column is irrelevant to ex
 
 users = data.shape[0]
 jokes = data.shape[1]
+cycles = 5#15
 #now randomly remove 2500 ratiings
 #only valid ratings (<> 99) are removed, until we reach the target 2500
 i = 0
@@ -69,13 +72,41 @@ def sgd(iterations):
                     err = train(user_id, item_id, rating)
                     error.append(err)
         mse = (np.array(error) ** 2).mean()   
-#        if(iteration%10 == 0):#000 == 0 ):
-#            print(mse)
-        print(mse)
-    return
+        if(iteration%1 == 0):#000 == 0 ):
+            print(mse)
+    return error
 
 t0 = time.time()
-sgd(3)#000)
-print(time.time() - t0)
+error = sgd(cycles)#000)
+print(time.time() - t0,"secs to run", cycles, "iterations")
 #predictions = latent_user_preferences.dot(latent_item_features.T)
 #print(predictions[:10][:10])
+
+plotdata1 = pd.DataFrame(np.vstack((np.arange(np.array(error).shape[0]), error)).T, columns=['cycles', 'MSE'])
+plt.figure()
+sb.lmplot(plotdata1.columns[0], plotdata1.columns[1], data=plotdata1, fit_reg=False)
+
+plt.savefig("convergence.png",bbox_inches='tight')
+plt.savefig("convergence.pdf",bbox_inches='tight')
+
+predictions = latent_user_preferences.dot(latent_item_features.T)
+
+error = []
+for user in range(users):
+    for joke in range(jokes):
+        #if this was a salient data point in the original sample
+        if df.iloc[user, joke + 1] != 99:
+            #and we used it for validation
+            if data.iloc[user, joke] == 99: 
+                #then compare predicted rating to original actual rating
+                err = predictions[user, joke] - df.iloc[user, joke + 1]
+                error.append(err)
+mse = (np.array(error) ** 2).mean()
+print(mse, "error across", len(error), "original ratings")
+
+
+
+
+
+
+

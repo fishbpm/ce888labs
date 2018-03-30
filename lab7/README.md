@@ -1,4 +1,4 @@
-# Lab3 - Predictive Modelling
+# Lab7 - NN Configuration - for Image Classification
 
 ## Submission 
 * Please note I have only pushed the content that I have produced in the lab, and any immediate dependencies.
