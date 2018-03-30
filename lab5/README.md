@@ -1,4 +1,4 @@
-# Lab4
+# Lab5 - Bandits
 
 ## Submission 
 * Please note I have only pushed the content that I have produced in the lab, and any immediate dependencies.
